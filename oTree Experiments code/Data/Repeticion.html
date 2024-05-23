@@ -1,0 +1,36 @@
+{% block title %}
+Gracias por presentarse
+{% endblock %}
+
+{% block content %}
+{{if player.participant.extra}}
+<p>
+    Se han presentado más participantes de los necesarios para el experimento y usted no ha sido seleccionado para
+    participar. <br><br>
+    Hemos asignado un pago mínimo por participación de {%real_payoff%} a todos los participantes que se presentaron a la
+    hora acordada. <br><br>
+    Sin embargo, solamente podemos hacer un pago por persona y experimento, por lo que tendrá que elegir si quiere
+    recibir invitaciones para futuras sesiones de este experimento en las que podrá recibir un pago mayor o si
+    únicamente quiere recibir el pago mínimo por presentarse a la sesión de hoy.
+</p>
+{{endif}}
+{{if player.session.canceled}}
+<p>
+El experimento ha sido cancelado por falta de jugadores. <br>
+Hemos asignado un pago mínimo por participación de {%real_payoff%} a todos los participantes que se presentaron a la
+hora acordada. <br><br>
+Sin embargo, solamente podemos hacer un pago por persona y experimento, por lo que tendrá que elegir si quiere
+recibir invitaciones para futuras sesiones de este experimento en las que podrá recibir un pago mayor o si
+únicamente quiere recibir el pago mínimo por presentarse a la sesión de hoy.
+</p>
+{{endif}}
+
+
+<p>
+    {{formfields}}
+
+</p>
+
+<button class="otree-btn-next btn btn-primary">Siguiente</button>
+
+{% endblock %}

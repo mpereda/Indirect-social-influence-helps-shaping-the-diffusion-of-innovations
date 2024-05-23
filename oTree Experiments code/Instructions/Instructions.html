@@ -1,0 +1,89 @@
+{% block title %}
+Bienvenido al experimento
+{% endblock %}
+
+{{ block content }}
+<h1>Instrucciones</h1>
+
+<p>
+    Este experimento pretende recrear la elección de diferentes medicamentos por los médicos de un hospital. Cada uno de
+    los participantes representará a un médico, que mostraremos como un círculo, y los dos medicamentos entre los que
+    tiene que elegir serán representados por colores dentro de los círculos durante este experimento. Al igual que los
+    médicos tenían distintos amigos médicos dentro del hospital, en cada uno de los bloques de este experimento usted
+    estará conectado con los participantes que representan a los médicos amigos, y podrá ir viendo qué colores han elegido.
+</p>
+<p>
+    Tomará varias decisiones de forma consecutiva, en momentos de tiempo que llamaremos “rondas” del experimento. Para
+    mostrar los resultados después de cada ronda, verá una imagen interactiva. En la imagen, usted
+    aparecerá como un círculo en el centro, del color que haya elegido. A una distancia más cercana a usted, en un
+    primer círculo gris, aparecen sus amigos, seguido de un círculo más claro con los amigos de sus amigos, y así en
+    adelante. Los puntos conectados por líneas son amigos directos. Podrá situar el cursor sobre cada punto para que se
+    iluminen sus amigos, ya que en la representación puede haber líneas superpuestas.
+</p>
+<p>
+    Si algún participante no toma la decisión en el tiempo asignado, su representación ya no será un punto sino que
+    tendrá forma triangular,
+    indicando que su decisión se ha tomado de manera automatizada esa ronda. Estos participantes inactivos tienen un 50%
+    de probabilidad de escoger un color aleatoriamente y otro 50% de probabilidad de escoger el color que más le acerque
+    al consenso.
+</p>
+<p>
+    Cada bloque constará de entre 10 y 15 rondas. En cada una de estas rondas tendrá que escoger uno de los colores,
+    viendo los resultados justo después. En cada ronda le mostraremos información de distintos puntos. El resto de nodos se
+    mostrarán en negro y no tendrá información sobre ellos. Es decir, los nodos negros también han escogido un color
+    cada ronda, pero usted no sabrá cuál es.
+</p>
+<p>
+    Su objetivo será conseguir que todos los participantes elijan el mismo color. Cuando lleguen al consenso, recibirá 5
+    puntos por cada ronda que quede para llegar al final. Recibirá 1 punto por cada ronda en la que tome usted la
+    decisión. Además, se pagará un plus de 15 puntos si el color en el que se llega al consenso era el minoritario al
+    comienzo.
+</p>
+<p>
+    Si no pulsa en el botón "Siguiente" antes de que pase el tiempo establecido en la página de la elección, esa ronda
+    usted contará como inactivo. Para que le paguemos en cada ronda debe haber tomado una decisión y no estar inactivo.
+</p>
+<p>
+    Como ejemplo, si todos los participantes se ponen de acuerdo en la ronda 6 de 10, cada uno ganará 6 puntos por las
+    rondas participadas más 5x4=20 puntos por haber llegado al consenso 4 rondas antes del final, sumando un total de 26
+    puntos. Si además el color al llegar al consenso era el minoritario, cada participante recibirá 15 puntos extra,
+    llegando a tener 41 puntos en total.
+</p>
+<p>
+    Ahora responderá algunas preguntas de control que le ayudarán a comprender las instrucciones. Podrá volver a leer un
+    resumen de las instrucciones en las páginas que siguen. Pulse "Siguiente" cuando esté listo para continuar.
+</p>
+
+
+
+<button class="otree-btn-next btn btn-primary">Siguiente</button>
+<br> </br>
+<a href="https://participantes.ibsen-h2020.eu/about" target="_blank">
+    <img src="{% static 'global/ibsen-logo.png' %}" alt="logo de IBSEN" width="100%" style="border:1px solid black">
+</a>
+
+{{ endblock }}
+
+{% block scripts %}
+<script>
+    function sayReady() {
+        let msg = new SpeechSynthesisUtterance();
+        msg.language = 'es-ES';
+        msg.text = "Comienza el experimento.";
+        window.speechSynthesis.speak(msg);
+    }
+
+    if (document.hidden) {
+        sayReady();
+    }
+</script>
+{% endblock %}
+
+{% block styles %}
+<style type="text/css">
+    .otree-btn-next {
+        float: left;
+    }
+</style>
+
+{% endblock %}

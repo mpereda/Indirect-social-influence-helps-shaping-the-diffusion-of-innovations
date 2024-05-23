@@ -1,0 +1,45 @@
+{% block title %}
+Siguiente situación
+{% endblock %}
+
+{{ block content }}
+<h1>Instrucciones</h1>
+
+<p>
+    En este caso le mostraremos colores elegidos por sus amigos y por las personas que están a distancia 4 de usted (los amigos de los amigos de los amigos de sus amigos).
+</p>
+<p>
+    Se le asignará un nodo aleatoriamente, por lo que puede que sus amigos no sean los mismos que en la anterior situación.
+</p>
+<p>
+    {{if player.initialcolor == "#8000ff"}}
+    Comenzará con el color Morado.
+    {{else}}
+    Comenzará con el color Lila.
+    {{endif}}
+</p>
+<p>
+    Recuerde que su objetivo es hacer que todas las personas elijan el mismo color. El color minoritario es el Morado, por
+    lo que pagaremos {{C.plus}} puntos extra si se ponen de acuerdo en ese color.
+</p>
+<p>
+    Pulse el botón "Siguiente" cuando esté listo.
+</p>
+
+
+<button class="otree-btn-next btn btn-primary">Siguiente</button>
+<br></br>
+<a>
+    <img src="{% static 'global/ibsen-logo.png' %}" alt="logo de IBSEN" width="100%" style="border:1px solid black">
+</a>
+
+{{ endblock }}
+
+{% block styles %}
+<style type="text/css">
+    .otree-btn-next {
+        float: left;
+    }
+</style>
+
+{% endblock %}

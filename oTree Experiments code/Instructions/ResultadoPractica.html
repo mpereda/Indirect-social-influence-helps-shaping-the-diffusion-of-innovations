@@ -1,0 +1,216 @@
+{% block title %}
+Práctica del experimento
+{% endblock %}
+
+{% block content %}
+<div style="align-items: center; display: flex;">
+    <div id="cy">
+    </div>
+
+    <aside>
+        <div>
+            <ul>
+                <p style="color:black;">- ¿Qué color ha escogido usted esta ronda?</p>
+                {{ if player.preg1 == 'Amarillo' }}
+                <li>¡Bien! La respuesta a la primera pregunta es correcta. Su nodo es de color Amarillo</li>
+                {{ else }}
+                <li>Falló en la primera pregunta. Usted es el nodo que se encuentra en el centro, bajo las letras "USTED
+                    ESTÁ AQUÍ". Ese nodo tiene el color Amarillo en esta imagen.</li>
+                {{ endif }}
+                <br></br>
+                <p style="color:black;">- ¿Qué color tienen sus amigos?</p>
+                {{ if player.preg2 == 'No lo podemos saber' }}
+                <li>¡Bien! La respuesta a la segunda pregunta es correcta. Si un nodo tiene color negro significa que no
+                    le estamos mostrando su decisión, por lo que no se puede saber qué color ha elegido ese
+                    participante.</li>
+                {{ else }}
+                <li>Falló en la segunda pregunta. Sus amigos son los que se encuentran en el círculo más cercano a
+                    usted. Si un nodo tiene color negro significa que no le estamos mostrando su decisión, por lo que no
+                    se puede saber qué color ha elegido ese participante.</li>
+                {{ endif }}
+                <br></br>
+                <p style="color:black;">- ¿Qué color tienen los amigos de sus amigos?</p>
+                {{ if player.preg3 == 'Azul' }}
+                <li>¡Bien! La respuesta a la tercera pregunta es correcta. Los amigos de sus amigos tienen todos color azul.</li>
+                {{ else }}
+                <li>Falló en la tercera pregunta. Los amigos de sus amigos son los que se encuentran en el segundo
+                    círculo. En esta imagen todos ellos tienen el color Azul.</li>
+                {{ endif }}
+                <br></br>
+                <p style="color:black;">- ¿Cuántos jugadores inactivos hay esta ronda?</p>
+                {{ if player.preg4 == 7 }}
+                <li>¡Bien! La respuesta a la cuarta pregunta es correcta. Los nodos con forma triangular representan a jugadores inactivos.</li>
+                {{ else }}
+                <li>Falló en la cuarta pregunta. Los jugadores inactivos son aquellos cuyos nodos tienen forma de
+                    triángulo en vez de círculo. En esta imagen hay 7 triángulos.</li>
+                {{ endif }}
+            </ul>
+
+
+            <button class="otree-btn-next btn btn-primary">Siguiente</button>
+        </div>
+    </aside>
+
+</div>
+
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.1.0/cytoscape.js"></script>
+<script>
+    var cy = window.cy = cytoscape({
+        container: document.getElementById('cy'),
+
+    });
+
+    cy.add([
+     { group: 'nodes', data: { id: 'n0' }, position: { x: 0, y: 0 }, style: {'width': 35, 'height': 35,'background-color': '#FFC300 ', 'label': 'USTED ESTÁ AQUÍ', 'z-index': '8', 'border-width' : 2} },
+
+     { group: 'nodes', data: { id: 'n1' }, position: { x: 2/2*100, y: 2/2*100 }, style: {'width': 35, 'height': 35,'background-color': 'black','shape': 'triangle', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'n2' }, position: { x: 0, y: 100 }, style: {'width': 35, 'height': 35,'background-color': 'black','shape': 'triangle', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'n3' }, position: { x: -2/2*100, y: 2/2*100 }, style: {'width': 35, 'height': 35,'background-color': 'black','shape': 'triangle', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'n4' }, position: { x: -100, y: 0 }, style: {'width': 35, 'height': 35,'background-color': 'black','shape': 'triangle', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'n5' }, position: { x: -2/2*100, y: -2/2*100 }, style: {'width': 35, 'height': 35,'background-color': 'black','shape': 'triangle', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'n6' }, position: { x: 0, y: -100 }, style: {'width': 35, 'height': 35,'background-color': 'black', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'n7' }, position: { x: 2/2*100, y: -2/2*100 }, style: { 'width': 35, 'height': 35,'background-color': 'black', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'n8' }, position: { x: 100, y: 0 }, style: {'width': 35, 'height': 35,'background-color': 'black','shape': 'triangle', 'z-index': '8', 'border-width' : 2} },
+
+     { group: 'nodes', data: { id: 'a1' }, position: { x: 200, y: 0 },  style: {'width': 35/2, 'height': 35/2,'background-color': '#0072B2','shape': 'triangle', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'a2' }, position: { x: 0, y: 200 },style: {'width': 35/2, 'height': 35/2,'background-color': '#0072B2', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'a3' }, position: { x: -200, y: 0 }, style: {'width': 35/2, 'height': 35/2,'background-color': '#0072B2', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 'a4' }, position: { x: 0, y: -200 }, style: {'width': 35/2, 'height': 35/2,'background-color': '#0072B2', 'z-index': '8', 'border-width' : 2} },
+
+     { group: 'nodes', data: { id: 's1' }, position: { x: 300, y: 0 },style: {'width': 35/3, 'height': 35/3,'background-color': '#FFC300 ', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 's2' }, position: { x: -300, y: 0 }, style: {'width': 35/3, 'height': 35/3,'background-color': '#FFC300 ', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 's3' }, position: { x: 0, y: -300 }, style: {'width': 35/3, 'height': 35/3,'background-color': '#FFC300 ', 'z-index': '8', 'border-width' : 2} },
+     { group: 'nodes', data: { id: 's4' }, position: { x: 0, y: 300 },style: {'width': 35/3, 'height': 35/3,'background-color': '#FFC300 ', 'z-index': '8', 'border-width' : 2} },
+// Central node and friends
+     { group: 'edges', data: { id: 'e1', source: 'n0', target: 'n1' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e2', source: 'n0', target: 'n2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e3', source: 'n0', target: 'n3' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e4', source: 'n0', target: 'n4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e5', source: 'n0', target: 'n5' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e6', source: 'n0', target: 'n6' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e7', source: 'n0', target: 'n7' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e8', source: 'n0', target: 'n8' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+// Intra-friends
+     { group: 'edges', data: { id: 'e11', source: 'n1', target: 'n2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e12', source: 'n1', target: 'n3' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e13', source: 'n1', target: 'n4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e14', source: 'n2', target: 'n4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+// Friends and second layer      
+     { group: 'edges', data: { id: 'e21', source: 'n1', target: 'a4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e22', source: 'n2', target: 'a4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e23', source: 'n7', target: 'a4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e24', source: 'n1', target: 'a3' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e25', source: 'n4', target: 'a3' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e26', source: 'n5', target: 'a2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e27', source: 'n3', target: 'a2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e28', source: 'n4', target: 'a1' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+// Intra-second layer
+     { group: 'edges', data: { id: 'e31', source: 'a1', target: 'a2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e32', source: 'a3', target: 'a4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+// Second and third layer
+     { group: 'edges', data: { id: 'e41', source: 'a1', target: 's1' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e42', source: 'a1', target: 's4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e43', source: 'a2', target: 's2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e44', source: 'a3', target: 's2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e45', source: 'a4', target: 's2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e46', source: 'a4', target: 's3' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e47', source: 'a4', target: 's4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+// Intra-third layer
+     { group: 'edges', data: { id: 'e51', source: 's1', target: 's2' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e52', source: 's1', target: 's3' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e53', source: 's1', target: 's4' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+     { group: 'edges', data: { id: 'e54', source: 's2', target: 's3' }, style: {'line-style': 'solid', 'line-opacity' : 0.01, 'z-index': '5'} },
+
+// Background nodes
+     { group: 'nodes', data: { id: 'b1' }, position: { x: 0, y: 0 }, style : {'background-color':'black', 'background-opacity': '0.15', 'width': 350, 'height': 350, 'z-index': '7' } },
+     { group: 'nodes', data: { id: 'b2' }, position: { x: 0, y: 0 }, style : {'background-color':'black', 'background-opacity': '0.15', 'width': 500, 'height': 500, 'z-index': '7' } },
+     { group: 'nodes', data: { id: 'b3' }, position: { x: 0, y: 0 }, style : {'background-color':'black', 'background-opacity': '0.15', 'width': 700, 'height': 700, 'z-index': '7' } },
+    ]);
+
+    cy.nodes().style({"font-size": 20, "color": 'white', 'text-outline-width': 1, 'text-outline-color': 'black','z-index-compare': 'manual'}) 
+
+
+    cy.fit()
+    cy.autolock(true);
+    cy.userZoomingEnabled(false);
+    cy.userPanningEnabled(false);
+
+
+    cy.$('node').on('mouseover', function (e) {
+        var ele = e.target;
+        ele.connectedEdges().style({ 'line-color': 'black', 'z-index' : 6});
+        ele.neighborhood().style({'border-color' : 'red'});
+        ele.style({'border-color' : 'red'});
+    });     
+
+
+    cy.$('node').on('mouseout', function (e) {
+        var ele = e.target;
+        ele.connectedEdges().style({ 'line-color': 'gray', 'line-opacity' : 0.01, 'z-index' : 5});
+        ele.neighborhood().style({'border-color' : 'black'});
+        ele.style({'border-color' : 'black'});
+    });
+</script>
+
+<script>
+    var ex = window.ex = cytoscape({
+        container: document.getElementById('ex'),
+
+    });
+    
+    ex.add([
+    { group: 'nodes', data: { id: 'n0' }, position: { x: 0, y: 0 }, style: {'shape': 'triangle', 'label': ' Jugador Inactivo'} },
+    { group: 'nodes', data: { id: 'n1' }, position: { x: 0, y: 35 }, style: {'label': '  Jugador Activo'} },
+    ])
+
+    ex.nodes().style({"font-size": 20, "color": 'black', 'text-halign': 'right', 'text-valign': 'center', 'background-color': 'black'}) 
+
+    ex.fit()
+    ex.autolock(true);
+    ex.userPanningEnabled(false);
+    ex.userZoomingEnabled(false);
+</script>
+
+
+{% endblock %}
+
+{% block styles %}
+<style type="text/css">
+    #cy {
+        width: 50%;
+        height: 350px;
+        display: block;
+        border-style: inset;
+        padding: 20px;
+    }
+
+    aside {
+        width: 35%;
+        padding: 2.5%;
+    }
+
+    .otree-btn-next {
+        float: right;
+    }
+
+    #ex {
+        width: 100%;
+        height: 75px;
+        display: block;
+    }
+
+    footer {
+        padding-top: 820px;
+    }
+</style>
+
+{% endblock %}

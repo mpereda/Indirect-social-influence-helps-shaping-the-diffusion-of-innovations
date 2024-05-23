@@ -1,0 +1,206 @@
+
+   
+    {% block title %}
+    Las decisiones de su grupo
+{% endblock %}
+
+{% block content %}
+    <header> <h5>Ronda {% player.round_number %} </h5> </header>
+    <div style=" float: left; width:75%">
+    <div id="cy">
+    </div>
+<input id="Restaurar" type="button" value="Restaurar vista" onclick="cy.fit();" />
+    </div>
+    <aside style="float: right">
+        <h2>Recuerde:</h2>
+        <p>-  Usted es el nodo central.</p>
+        <p>-  Los nodos situados en su círculo más cercano son sus amigos. Los situados en el siguiente círculo son los amigos de sus amigos, y así sucesivamente.</p>
+        <p>-  Las líneas indican quién es amigo de quién. Puede situar el ratón sobre un nodo para que se ilumine, se iluminen sus amigos y se resalten las líneas entre ellos.</p>
+        <p>-  Si un nodo aparece negro significa que no le estamos mostrando el color que ha elegido.</p>
+        <p>-  La forma del nodo indica si el jugador está activo:</p>
+        <div id="ex">
+
+        </div>
+    <br> </br>
+    <button class="otree-btn-next btn btn-primary">Siguiente</button>
+
+    </aside>
+    
+    <div style="height: 100px;"> </div>
+    <footer>
+    <div class="container ">
+        <div class="row">
+        </div>
+</div>
+<p> </p> <p> </p> <p> </p>
+    <h3>Recordatorio de las instrucciones</h3>
+    
+    <p>
+        Este experimento pretende recrear la elección de diferentes medicamentos por los médicos de un hospital. Cada uno de
+        los participantes representará a un médico, que mostraremos como un círculo, y los dos medicamentos entre los que
+        tiene que elegir serán representados por colores dentro de los círculos durante este experimento. Al igual que los
+        médicos tenían distintos amigos médicos dentro del hospital, en cada uno de las situaciones usted estará conectado con
+        los participantes que representan a los médicos amigos, y podrá ir viendo qué colores han elegido.
+    </p>
+    <p>
+        Para mostrar los resultados después de cada ronda, le mostraremos una imagen interactiva. En la imagen, usted
+        aparecerá como un círculo en el centro, del color que haya elegido. A una distancia más cercana a usted, en un
+        primer círculo gris, aparecen sus amigos, seguido de un círculo más claro con los amigos de sus amigos, y así en
+        adelante. Los puntos conectados por líneas son amigos directos. Podrá situar el cursor sobre cada punto para que se
+        iluminen sus amigos, ya que en la representación puede haber líneas superpuestas.
+    </p>
+    <p>
+        Si algún participante se desconecta, su representación ya no será un punto sino que tendrá forma triangular,
+        indicando que su decisión se ha tomado de manera automatizada esa ronda. Estos participantes inactivos tienen un 50%
+        de probabilidad de escoger un color aleatoriamente y otro 50% de probabilidad de escoger el color que más le acerque
+        al consenso.
+    </p>
+    <p>
+        Cada situación constará de entre 10 y 15 rondas. En cada una de estas rondas tendrá que escoger uno de los colores, viendo
+        los resultados justo después. En cada ronda le mostraremos información de distintos puntos. El resto de nodos se
+        mostrarán en negro y no tendrá información sobre ellos. Es decir, los nodos negros también han escogido un color
+        cada ronda, pero usted no sabrá cuál es.
+    </p>
+    <p>
+        Su objetivo será conseguir que todos los participantes elijan el mismo color. Conseguirá tantos puntos como rondas
+        queden antes de llegar al consenso. Además, se pagará un plus de 15 puntos si el color en el que se llega al consenso
+        era el minoritario al comienzo (en este caso el Azul).
+    </p>
+    <p>
+        Puede ocurrir que todos los nodos visibles para usted tengan el mismo color pero que el experimento no acabe. Eso
+        significará que aún habrá participantes entre los no visibles para usted que hayan elegido el otro color.
+    </p>
+    <a>
+        <img src="{% static 'global/ibsen-logo.png' %}" alt="logo de IBSEN" width="100%" style="border:1px solid black">
+    </a>
+    </footer>
+
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.1.0/cytoscape.js"></script>
+    <script>
+        var jsonnet = JSON.parse('{{ ego_network }}');
+        console.log(jsonnet);
+        var cy = window.cy = cytoscape({
+            container: document.getElementById('cy'),
+
+        });
+        cy.json(jsonnet);
+
+        cy.nodes().style({"font-size": 20, "color": 'white', 'text-outline-width': 1, 'text-outline-color': 'black'}) 
+
+        var collection = cy.elements('node[classes = out]');
+        collection.style({'background-color' : 'black'});
+
+        cy.fit()
+        cy.userZoomingEnabled(true);
+        cy.autolock(true);
+
+
+        cy.$('node').on('mouseover', function (e) {
+            var ele = e.target;
+            ele.connectedEdges().style({ 'line-color': 'black', 'z-index' : 10});
+            ele.neighborhood().style({'border-color' : 'red'});
+            ele.style({'border-color' : 'red'});
+        });     
+
+
+        cy.$('node').on('mouseout', function (e) {
+            var ele = e.target;
+            ele.connectedEdges().style({ 'line-color': 'gray', 'z-index' : 6});
+            ele.neighborhood().style({'border-color' : 'black'});
+            ele.style({'border-color' : 'black'});
+        });
+
+        cy.on('mousedown', function (e) {
+            const startX = e.position.x;
+            const startY = e.position.y;        
+
+            cy.on('mousemove', function (e) {
+                const currentX = e.position.x;
+                const currentY = e.position.y;
+
+                const distanceX = currentX - startX;
+                const distanceY = currentY - startY;
+                
+                cy.panBy({
+                    x: distanceX,
+                    y: distanceY
+                });
+
+                startX = currentX;
+                startY = currentY;
+            });
+            cy.on('mouseup', function (e) {
+                cy.off('mousemove');
+            });
+        });
+    </script>
+
+    <script>
+        var ex = cytoscape({
+            container: document.getElementById('ex'),
+
+        });
+        
+        ex.add([
+        { group: 'nodes', data: { id: 'n0' }, position: { x: 0, y: 0 }, style: {'shape': 'triangle', 'label': ' Jugador Inactivo'} },
+        { group: 'nodes', data: { id: 'n1' }, position: { x: 0, y: 50 }, style: {'label': '  Jugador Activo'} },
+        ])
+
+        ex.nodes().style({"font-size": 20, "color": 'black', 'text-halign': 'right', 'text-valign': 'center', 'background-color': 'black'}) 
+
+        ex.fit()
+        ex.autolock(true);
+        ex.userPanningEnabled(false);
+    </script>
+
+<script>
+    function sayReady() {
+        let msg = new SpeechSynthesisUtterance();
+        msg.language = 'es-ES';
+        msg.text = "Vea las decisiones de su grupo.";
+        window.speechSynthesis.speak(msg);
+    }
+
+    if (document.hidden) {
+        sayReady();
+    }
+</script>
+
+{% endblock %}
+
+{% block styles %}
+    <style type="text/css">
+        #cy {
+            height: 900px;
+            display: block;
+            border-style: inset;
+            padding-top: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        aside {
+            width: 20%;
+        }
+
+        #ex {
+            width: 100%;
+            height: 75px;
+            display: block;
+        }
+        footer {
+            padding-top: 820px;            
+        }
+    </style>
+
+{% endblock %}

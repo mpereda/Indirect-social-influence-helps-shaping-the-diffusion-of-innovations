@@ -1,0 +1,31 @@
+   
+    {% block title %}
+    {{if player.consensus}}
+        ¡Enhorabuena!
+    {{else}}
+        Lo sentimos
+    {{endif}}
+    {% endblock %}
+
+{{ block content }}
+
+    <p>
+    {{if player.consensus}}
+        Han alcanzado el consenso eligiendo todos el mismo color. Su pago es de {{player.payoff}}
+    {{else}}
+        No han alcanzado un consenso en el número de rondas máximo. Su pago es de {{player.payoff}}
+    {{endif}}
+    </p>
+    <p>
+        El experimento no ha acabado. Por favor, pulse siguiente cuando esté preparado.
+    </p>
+
+    <button class="otree-btn-next btn btn-primary">Siguiente</button>
+<br> </br>
+    <a>
+        <img src="{% static 'global/ibsen-logo.png' %}" alt="logo de IBSEN" width="100%" style="border:1px solid black">
+    </a>
+
+{{ endblock }}
+    
+    

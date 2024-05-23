@@ -1,0 +1,22 @@
+   
+    {% block title %}
+        Elija su acción para la próxima ronda
+    {% endblock %}
+
+{{ block content }}
+<header> <h5>Ronda {% player.round_number %} </h5> </header>
+    <p>
+        Elija su color en la próxima ronda:
+    </p>
+
+
+    {{ formfields }}
+
+    <button class="otree-btn-next btn btn-primary">Siguiente</button>
+    <br> </br>
+    <a>
+        <img src="{% static 'global/ibsen-logo.png' %}" alt="logo de IBSEN" width="100%" style="border:1px solid black">
+    </a>
+{{ endblock }}
+    
+    

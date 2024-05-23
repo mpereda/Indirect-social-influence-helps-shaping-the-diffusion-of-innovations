@@ -1,0 +1,34 @@
+{% block title %}
+Pago
+{% endblock %}
+
+{% block content %}
+
+{{if player.participant.extra}}
+<p>
+    Se han presentado más participantes de los necesarios para el experimento y usted no ha sido seleccionado para participar.
+    Le pagaremos {% real_payoff %} por presentarse a la hora acordada.
+</p>
+{{endif}}
+
+{{if player.session.canceled}}
+    <p>
+        El experimento ha sido cancelado por falta de jugadores. Se le pagará {% real_payoff %} por presentarse a la hora acordada.
+    </p>
+{{else}}
+{{if not player.participant.extra}}
+<p>
+    Ha ganado {% participant.payoff %}, lo que equivale a {% real_payoff %}.
+</p>
+{{endif}}
+{{ endif }}
+
+
+<p>
+    {{formfields}}
+
+</p>
+
+<button class="otree-btn-next btn btn-primary">Siguiente</button>
+
+{% endblock %}
