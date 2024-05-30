@@ -1,6 +1,6 @@
 Copyright (c) 2024 Manuel Miranda, María Pereda, Angel Sánchez and Ernesto Estrada
 
-# Indirect-social-influence-helps-shaping-the-diffusion-of-innovations
+# :globe_with_meridians: Indirect-social-influence-helps-shaping-the-diffusion-of-innovations
 Code for the paper "Indirect social influence helps shaping the diffusion of innovations"
 
 * The file Notebook.py contains the code to reproduce the main analysis and figures from the article.
