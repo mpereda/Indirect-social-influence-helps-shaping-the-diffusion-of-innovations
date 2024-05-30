@@ -1,0 +1,28 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Indirect-social-influence-helps-shaping-the-diffusion-of-innovations
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Manuel
+    family-names: Miranda
+    email: mmiranda@ifisc.uib-csic.es
+    affiliation: IFISC (UIB-CSIC)
+    orcid: 'https://orcid.org/0000-0003-0424-6211'
+  - given-names: María
+    family-names: Pereda
+    affiliation: "\tGrupo Interdisciplinar de Sistemas Complejos (GISC), RWTH Aachen University, Universidad Carlos III de Madrid - Campus de Leganes, Universidad Politécnica de Madrid, Universidad de Burgos, Universidad de Valladolid"
+    orcid: 'https://orcid.org/0000-0002-6151-1176'
+    email: mariaperedagarcia@gmail.com
+repository-code: >-
+  https://github.com/mpereda/Indirect-social-influence-helps-shaping-the-diffusion-of-innovations
+abstract: >-
+  This repository contains the code to generate the images
+  in the article "Indirect social influence helps shaping
+  the diffusion of innovations" as well as the code used to
+  perform the experiments therein.
