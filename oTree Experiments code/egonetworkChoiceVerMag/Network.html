@@ -7,6 +7,7 @@
 {% block content %}
     <header> <h5>Ronda {% player.round_number %} </h5> </header>
     <div style=" float: left; width:75%">
+    <!-- This div generates the network -->
     <div id="cy">
     </div>
 <input id="Restaurar" type="button" value="Restaurar vista" onclick="cy.fit();" />
@@ -18,6 +19,7 @@
         <p>-  Las líneas indican quién es amigo de quién. Puede situar el ratón sobre un nodo para que se ilumine, se iluminen sus amigos y se resalten las líneas entre ellos.</p>
         <p>-  Si un nodo aparece negro significa que no le estamos mostrando el color que ha elegido.</p>
         <p>-  La forma del nodo indica si el jugador está activo:</p>
+        <!-- This div generates the subfigure in the reminder to show the shape difference between active and inactive nodes -->
         <div id="ex">
 
         </div>
@@ -103,7 +105,7 @@
         cy.userZoomingEnabled(true);
         cy.autolock(true);
 
-
+        // Highlight the neighborhood of a node when the user hovers over it
         cy.$('node').on('mouseover', function (e) {
             var ele = e.target;
             ele.connectedEdges().style({ 'line-color': 'black', 'z-index' : 10});
@@ -119,6 +121,7 @@
             ele.style({'border-color' : 'black'});
         });
 
+        // Allow the user to pan the network by clicking and dragging the mouse
         cy.on('mousedown', function (e) {
             const startX = e.position.x;
             const startY = e.position.y;        
@@ -162,6 +165,7 @@
         ex.userPanningEnabled(false);
     </script>
 
+<!-- This script generates a sound to alert people that are not currently focused on the page at the moment of loading it. -->
 <script>
     function sayReady() {
         let msg = new SpeechSynthesisUtterance();

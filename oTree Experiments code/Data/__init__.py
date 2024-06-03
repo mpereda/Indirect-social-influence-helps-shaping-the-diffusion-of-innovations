@@ -31,7 +31,8 @@ def creating_session(subsession: Subsession):
     subsession.session.canceled=False
     for p in subsession.get_players():
         p.Repite=False
-    
+
+#These functions are used to chech if the email format is correct (and different from @paypal.me)    
 def Correo_error_message(Player,value):
     print(value)
     if (check(value))==0:

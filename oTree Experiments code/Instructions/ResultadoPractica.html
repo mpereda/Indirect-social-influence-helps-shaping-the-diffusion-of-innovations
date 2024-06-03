@@ -4,12 +4,14 @@ Práctica del experimento
 
 {% block content %}
 <div style="align-items: center; display: flex;">
+    <!-- This div recreates the practice network smaller and without the possibility of moving. -->
     <div id="cy">
     </div>
 
     <aside>
         <div>
             <ul>
+                <!-- Each of the answers is checked to be correct and, if falied, the explanation in shown. -->
                 <p style="color:black;">- ¿Qué color ha escogido usted esta ronda?</p>
                 {{ if player.preg1 == 'Amarillo' }}
                 <li>¡Bien! La respuesta a la primera pregunta es correcta. Su nodo es de color Amarillo</li>

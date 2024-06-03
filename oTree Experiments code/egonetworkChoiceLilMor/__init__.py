@@ -12,12 +12,10 @@ from collections import Counter
 class C(BaseConstants):
     NAME_IN_URL = 'Egonetworks_Vecinos4'
     PLAYERS_PER_GROUP = None
-    NET_SIZE = 31 #Tamaño de la red
-    NUM_ROUNDS = 15
-    radio_amigos_out=1 #Variar de 1 a nx.diameter(g)
-    radio_amigos_in=1 #Variar de 1 a nx.diameter(g)
-    radio_amigos=4
-    plus=15 #Puntos que se suman al payoff si hay consenso
+    NET_SIZE = 31 #Size of the network
+    NUM_ROUNDS = 15 #Number of rounds (has to be greater than the
+    radio_amigos=4 #Distance of long-range friends shown
+    plus=15 #Extra payoff for consensus in the "innovation" color
 
 class Subsession(BaseSubsession):
     pass
@@ -40,6 +38,7 @@ class Player(BasePlayer):
     color_friends_shown  = models.LongStringField()
     max_rounds= models.IntegerField()
 
+# Randomize order in which the choices are displayed for each player and round
 def action_choices(Player):
 	choices=[["#a792fc", "Violeta (claro)"], ["#8000ff", "Morado (oscuro)"]]
 	random.shuffle(choices)
@@ -49,6 +48,7 @@ def action_choices(Player):
 # FUNCTIONS
 def creating_session(group: Group):
     if group.round_number == 1:
+        # Assign players starting color, node and maximum rounds that his gruop will play in this Setup
         initialize_network= ["#a792fc" for i in range(31)]
         starting_minority = np.random.choice(range(31), group.session.config['Innovadores'], replace=False)
         for i in starting_minority:
@@ -77,6 +77,7 @@ def set_payoff(group: Group):
 
     # Create a dictionary of positions for each of the egonetworks
     distances = dict(nx.all_pairs_shortest_path_length(g))
+    # Manually assign the positions of the nodes in the egonetworks. dispx and dispy are manually assigned to create the circular layout with the desired width. Angle is the starting angle at which nodes are plotted. For other networks can be changed or randomized to avoid edge overlappings.
     pos = {}
     dispx = 100
     dispy = -100
@@ -124,7 +125,7 @@ def set_payoff(group: Group):
         # egonetwork = nx.cytoscape_data(nx.minimum_spanning_tree(nx.ego_graph(g,int(p.node),radius=nx.diameter(g))))    ## This option creates the complete ego tree
         egonetwork = nx.cytoscape_data(nx.ego_graph(g,int(p.node),radius=nx.diameter(g)))     ## This option creates the complete ego graph
 
-        ##In each egonetwork we store the style that the elements should show
+        ##In each egonetwork we store the style that the elements should show (position, color, size and shape. z-index is fixed so that they overlay the gray circles indicating the distance layers)
         neighbors = []
         neighbors_with_bots = []
         friends = []
@@ -151,6 +152,8 @@ def set_payoff(group: Group):
                     if bots[int(egonetwork['elements']['nodes'][i]['data']['id'])-1]:
                         egonetwork['elements']['nodes'][i]['style'] = {'width': 50/distances[int(p.node)][int(egonetwork['elements']['nodes'][i]['data']['id'])], 'height': 50/distances[int(p.node)][int(egonetwork['elements']['nodes'][i]['data']['id'])],'background-color': 'black','z-index': '8', 'border-width' : 2,'shape' : 'triangle'}
 
+        #Choose the neighbors and friends to show
+        #If there are more than 2 neighbors active neighbors, show 2 of them randomly. If not, show the active neighbor and a random bot or two bots.
         if len(neighbors) >=2:
             neighbors_shown=np.random.choice(neighbors,2, replace=False)
         elif len(neighbors)==1:
@@ -170,6 +173,7 @@ def set_payoff(group: Group):
         if friends_shown != []:
             p.color_friends_shown=str([colors[int(egonetwork['elements']['nodes'][i]['data']['id'])] for i in friends_shown])
 
+        #Assign the majority color between the nodes shown to the bot. If there is a tie, choose randomly between the two colors.
         neigborscolor = p.color_neighbors_shown
         c=Counter(neigborscolor)
         if c["#a792fc"] < c["#8000ff"]:
@@ -208,6 +212,7 @@ def set_payoff(group: Group):
 
         egonetwork['style'] = {'z-index-compare': 'manual'}
         c=len(egonetwork['elements']['nodes'])
+        # Assign a z-index to each edge to be plotted over the gray circles.
         for edge in egonetwork['elements']['edges']:
             c=c+1
             edge['data']['id'] = c
@@ -218,11 +223,11 @@ def set_payoff(group: Group):
             egonetwork['elements']['nodes'].append({ 'data': { 'id': str(c) }, 'renderedPosition': { 'x': 100, 'y': -100 }, 'style' : {'background-color':'black', 'background-opacity': '0.15', 'width': 300+outcirc*200, 'height': 300+outcirc*200, 'z-index': '7' }, 'classes': ['foo'] })
         p.egonetwork_data = json.dumps(egonetwork) 
 
+
+# Set the initial network for the first round, simmilar to the set_payoff function but without the payoff and using player.initialcolor instead of player.action.
 def set_network_initial(group: Group):
-       # Create the graph as a networkx graph
     g = nx.read_edgelist( group.session.config['grafo'],create_using=nx.Graph(), nodetype = int)
     initialcondition = [p.initialcolor for p in group.get_players()]
-    # Create a dictionary of positions for each of the egonetworks
     distances = dict(nx.all_pairs_shortest_path_length(g))
     pos = {}
     dispx = 100
@@ -242,18 +247,15 @@ def set_network_initial(group: Group):
     players = group.get_players()
     colors = {}
     bots = np.zeros(C.NET_SIZE)
-    # Create a list of those users that were inactive last round
     for p in players:
         colors[int(p.node)] = initialcondition[p.node-1]
         bots[int(p.node)-1] = int(p.bot)
 
     for p in players:
-        #Assign an egonetwork to each player in JSON format
         egonetwork = {}
         # egonetwork = nx.cytoscape_data(nx.minimum_spanning_tree(nx.ego_graph(g,int(p.node),radius=nx.diameter(g))))    ## This option creates the complete ego tree
         egonetwork = nx.cytoscape_data(nx.ego_graph(g,int(p.node),radius=nx.diameter(g)))     ## This option creates the complete ego graph
 
-        ##In each egonetwork we store the style that the elements should show
         neighbors = []
         neighbors_with_bots = []
         neighbors_shown = []
@@ -330,7 +332,6 @@ def set_network_initial(group: Group):
             c=c+1
             edge['data']['id'] = c
             edge['style'] = {'line-style': 'solid','line-opacity' : 0.01, 'z-index': '8'}
-        ## Create concentric cicles that show the distance between the central self node and each of the other nodes
         for outcirc in range(max(distances[p.node].values())):
             c=c+1
             egonetwork['elements']['nodes'].append({ 'data': { 'id': str(c) }, 'renderedPosition': { 'x': 100, 'y': -100 }, 'style' : {'background-color':'black', 'background-opacity': '0.15', 'width': 300+outcirc*200, 'height': 300+outcirc*200, 'z-index': '7' }, 'classes': ['foo'] })
@@ -344,6 +345,7 @@ class Explanation(Page):
     def is_displayed(player):
         return player.round_number == 1
     def before_next_page(player, timeout_happened):
+        #Assign a bot to the player if the player does not press the button in time
         if timeout_happened:
             player.bot = True
         
@@ -369,7 +371,7 @@ class Choose(Page):
 
     def before_next_page(player, timeout_happened):
         if timeout_happened:
-            # We treat the player as a bot (randomly chosen if it's first round, then 50% to follow majority of its lookable nodes and 50% to choose randomly)
+            # If the decision is not taken in time, we treat the player as a bot (randomly chosen if it's first round, then 50% to follow majority of its lookable nodes and 50% to choose randomly)
             player.bot = True
             if (player.round_number == 1):
                 player.action = random.choice(['#a792fc', '#8000ff'])

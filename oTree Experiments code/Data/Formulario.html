@@ -1,7 +1,7 @@
 {% block title %}
 Pago
 {% endblock %}
-
+<!-- This page is shown at the end of the experiment but also if there were more than 31 participants (player.participant.extra = True), or if there were not at least 24 participants present (player.session.canceled = True). -->
 {% block content %}
 
 {{if player.participant.extra}}
